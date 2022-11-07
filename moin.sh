@@ -22,12 +22,14 @@ set -o nounset                              # Treat unset variables as an error
 # Arguments:
 #   prefix) URI
 # Return: setup URI
-prefix() { local prefix="$1" file=/usr/local/share/moin/wikiconfig.py
-    if [[ $prefix == "/" ]]; then
-        sed -i '/^url_prefix_static = /s|^|#|' $file
-    else
-        sed -i 's|.*\(url_prefix_static = \)|'"'$prefix'"'|' $file
-    fi
+prefix() { 
+    echo "================ disable for now==============="
+    #local prefix="$1" file=/usr/local/share/moin/wikiconfig.py
+    #if [[ $prefix == "/" ]]; then
+    #    sed -i '/^\(\s*\)url_prefix_static = /s|^|#|' $file
+    #else
+    #    sed -i 's|^\(.*\)#?.(url_prefix_static = \).*|'\1\2"'$prefix'" + \$prefix'|' $file
+    #fi
 }
 
 ### super: Configure admin user for wiki
@@ -86,7 +88,8 @@ else
     [[ "${LANG:-""}" ]] || export LANG=en_US.UTF-8
     exec uwsgi --uid uwsgi \
                 -s /tmp/uwsgi.sock \
-                --uwsgi-socket 0.0.0.0:3031 \
+                --http-socket :3031 \
+                -b 32768 \
                 --plugins python \
                 --pidfile /tmp/uwsgi-moinmoin.pid \
                 --chdir /usr/local/share/moin \
